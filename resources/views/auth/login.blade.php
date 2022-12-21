@@ -50,7 +50,7 @@
                     <div class="login-card card-block auth-body mr-auto ml-auto">
                         <form class="md-float-material">
                             <div class="text-center">
-                                <img src="assets/images/logo.png" alt="logo.png">
+                                <img src="assets/images/logo_big.png" alt="logo.png">
                             </div>
                             <div class="auth-box">
                                 <div class="row m-b-20">
