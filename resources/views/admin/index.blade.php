@@ -324,8 +324,8 @@
                                 <i class="fa fa-puzzle-piece text-c-pink d-block f-40"></i>
                                 <h4 class="m-t-20">Business Plan</h4>
                                 <p class="m-b-20">This is your current active plan</p>
-                                <button class="btn btn-danger btn-sm btn-round">Upgrade to
-                                    VIP</button>
+                                {{-- <button class="btn btn-danger btn-sm btn-round">Upgrade to
+                                    VIP</button> --}}
                             </div>
                         </div>
                     </div>
