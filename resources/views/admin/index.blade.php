@@ -332,7 +332,7 @@
                     <!-- social statustic end -->
 
                     <!-- users visite and profile start -->
-                    <div class="col-md-4">
+                    {{-- <div class="col-md-4">
                         <div class="card user-card">
                             <div class="card-header">
                                 <h5>Profile</h5>
@@ -476,7 +476,7 @@
                                 </ul>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
                     <!-- users visite and profile end -->
 
                 </div>
