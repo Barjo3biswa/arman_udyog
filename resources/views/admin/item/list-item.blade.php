@@ -3,9 +3,7 @@
 @livewireStyles
 @endsection
 @section('content')
-    <!-- Main-body start -->
     <livewire:add-item />
-
 @endsection
 @section('scripts')
 @livewireScripts

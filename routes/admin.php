@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\admin\itemController;
+use App\Http\Controllers\admin\jobCardController;
 use GuzzleHttp\Middleware;
 use Illuminate\Support\Facades\Route;
 
@@ -36,4 +37,7 @@ Route::group(['middleware'=>'admin'], function () {
 
 
 
+    Route::get("job_card",[jobCardController::class,'index'])->name('admin.job_card');
+
+    Route::get("job_orders",[jobCardController::class,'jobOrders'])->name('admin.job_orders');
 });
