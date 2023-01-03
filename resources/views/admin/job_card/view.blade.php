@@ -12,12 +12,17 @@
         {
             display: none !important;
         }
+        @page { size: landscape; }
     }
 
 </style>
 @endsection
 @section('content')
     <!-- Main-body start -->
+<div id="printableall">
+    {{-- <div class="form-group row">
+        <button class="btn btn-primary not-print" onclick="printDiv('printableall')" style="float:right">Print All</button>
+    </div> --}}
     <div class="main-body">
         <div class="page-wrapper">
             <div class="card" id="printableArea1">
@@ -46,6 +51,7 @@
             </div>
         </div>
     </div>
+</div>
 @endsection
 @section('scripts')
 <script>

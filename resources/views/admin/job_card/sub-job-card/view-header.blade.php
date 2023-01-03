@@ -16,7 +16,7 @@
     </div>
     <div class="row">
         <div class="col-md-12" style="text-align: center">
-            <h5>ANISHA TOWER, 161 D, GS Road Christan Basti,<br/>Guwahati-5,Ph-2347171/72.</h5>
+            <h6>ANISHA TOWER, 161 D, GS Road Christan Basti,<br/>Guwahati-5,Ph-2347171/72.</h6>
         </div>
     </div>
 </div>
