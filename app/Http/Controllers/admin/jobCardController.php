@@ -24,4 +24,15 @@ class jobCardController extends Controller
         $job_cards = JobCard::orderBy('id','DESC')->get();
         return view('admin.job_card.job_orders',compact('job_cards'));
     }
+
+    public function viewJobCard(Request $request)
+    {
+        if($request->has('id')){
+            $id=Crypt::decrypt($request->id);
+        }
+        $job_card=JobCard::with('job_order')->where('id',$id)->first();
+        // dd($job_card);
+        return view('admin.job_card.view',compact('job_card'));
+        // dd("ok");
+    }
 }

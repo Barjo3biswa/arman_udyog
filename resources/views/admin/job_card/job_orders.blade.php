@@ -41,7 +41,7 @@
                                         </th>
                                         <th>
                                             @if ($job->status=='Order_Generated')
-                                                <button class="btn btn-primary">View Job Order</button>
+                                                <a href="{{route('admin.job_card_view',['id'=>Crypt::encrypt($job->id)])}}" class="btn btn-primary">View Job Order </a>
                                             @else
                                                 <a href="{{route('admin.job_card',['id'=>Crypt::encrypt($job->id)])}}" class="btn btn-primary">Edit </a>
                                             @endif

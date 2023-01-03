@@ -16,4 +16,9 @@ class JobCard extends Model
     {
         return $this->hasOne(Customer::class, 'id','customer_id');
     }
+
+    public function job_order()
+    {
+        return $this->hasOne(JobOrder::class, 'cob_card_id','id');
+    }
 }
