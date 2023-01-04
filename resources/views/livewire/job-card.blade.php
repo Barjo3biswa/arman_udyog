@@ -31,10 +31,10 @@
                                     {{-- @if ($job_order==false) --}}
                                     <div class="form-group row">
                                         <div class="col md-12" style="align-content: center;">
-                                            <button class="btn btn-{{$pre_press==true ? 'primary' :'secondary' }}" wire:click="formStep('pre')">Pre Press</button>
-                                            <button class="btn btn-{{$press==true ? 'primary' :'secondary' }}" wire:click="formStep('press')">Press</button>
-                                            <button class="btn btn-{{$post_press==true ? 'primary' :'secondary' }}" wire:click="formStep('post')">Post Press</button>
-                                            <button class="btn btn-{{$job_order==true ? 'primary' :'secondary' }}" wire:click="formStep('order')">Job Order</button>
+                                            <button class="btn btn-{{$pre_press==true ? 'primary' :'secondary' }}" wire:click="formStep('Pre_Press')">Pre Press</button>
+                                            <button class="btn btn-{{$press==true ? 'primary' :'secondary' }}" wire:click="formStep('Press')">Press</button>
+                                            <button class="btn btn-{{$post_press==true ? 'primary' :'secondary' }}" wire:click="formStep('Post_Press')">Post Press</button>
+                                            <button class="btn btn-{{$job_order==true ? 'primary' :'secondary' }}" wire:click="formStep('Order_Generated')">Job Order</button>
                                         </div>
                                     </div>
                                     {{-- @endif --}}

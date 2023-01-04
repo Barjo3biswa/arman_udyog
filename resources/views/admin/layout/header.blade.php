@@ -1,5 +1,5 @@
 <head>
-    <title>Gradient Able bootstrap admin template by codedthemes </title>
+    <title>Aman Udyog Private Limited</title>
     <!-- HTML5 Shim and Respond.js IE9 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>

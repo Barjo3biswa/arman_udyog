@@ -43,17 +43,16 @@ class JobCard extends Component
         $this->press=false;
         $this->post_press=false;
         $this->job_order=false;
-        if($step=="pre"){
+        if($step=="Pre_Press"){
             $this->pre_press=true;
-        }elseif($step=="press"){
+        }elseif($step=="Press"){
             $this->press=true;
-        }elseif($step=="post"){
+        }elseif($step=="Post_Press"){
             $this->post_press=true;
-        }elseif($step=="order"){
+        }elseif($step=="Order_Generated"){
             $this->job_order=true;
         }
     }
-
 
 
     public function savePrePress()
@@ -202,6 +201,7 @@ class JobCard extends Component
             $this->date_of_delivery = $editable_job->date_of_delivery;
             $this->delivery_by = $editable_job->delivery_by;
             $this->jobOrder();
+            $this->formStep($editable_job->status);
         }
     }
 
