@@ -86,13 +86,14 @@ class AddItem extends Component
 
     public function save()
     {
+        // dd($this->edit_id);
         DB::beginTransaction();
         try{
             DB::commit();
             $unit_name = Unit::where('id',$this->unit)->first();
             Item::updateOrCreate(
                 ['id' => $this->edit_id],
-                ['item_code'       => $this->item_code,
+                ['item_code'      => $this->item_code,
                 'item_name'       => $this->item_name,
                 'product_id'      => $this->product,
                 'unit_id'         => $this->unit,
@@ -100,8 +101,9 @@ class AddItem extends Component
                 'dimension_id'    => $this->dimension,
                 'thickess_id'     => $this->gsm,
                 'company_id'      => $this->company,
-                'opening_quantity'=> $this->quantity,
+                'opening_quantity'   => $this->quantity,
                 'closing_quantity'=> $this->quantity,
+                'current_stock'   => $this->quantity,
                 'price'           => $this->price,
 
             ]);
@@ -111,7 +113,11 @@ class AddItem extends Component
             $this->alert_type="success";
             $this->alert_status=true;
         }catch(\Exception $e){
+            // dd($e);
             DB::rollBack();
+            $this->alert_msg="Oppss!! Somthing Went Wrong..";
+            $this->alert_type="danger";
+            $this->alert_status=true;
         }
     }
 
