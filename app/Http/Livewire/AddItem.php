@@ -152,56 +152,56 @@ class AddItem extends Component
 
     public function exportToExcel()
     {
-         $excel    = Item::with('gsmdetails')->get();
-        //  dd($excel);
-         $fileName = "Itm_list".'.csv';
-         $headers = array(
-             "Content-type"        => "text/csv",
-             "Content-Disposition" => "attachment; filename=$fileName",
-             "Pragma"              => "no-cache",
-             "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
-             "Expires"             => "0",
-         );
+        $excel    = Item::with('gsmdetails')->get();
+    //  dd($excel);
+        $fileName = "Itm_list".'.csv';
+        $headers = array(
+            "Content-type"        => "text/csv",
+            "Content-Disposition" => "attachment; filename=$fileName",
+            "Pragma"              => "no-cache",
+            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+            "Expires"             => "0",
+        );
 
-         $columns = array(
+        $columns = array(
 
-            'Sl','Item Code', 'Item Name', 'Product Cat', 'Dimenssion(lXb)',	'GSM',	'Unit',	'Company Name',	'Opening Quantity',	'Closing Quantity',	'Price'
-         );
+        'Sl', 'Item Code', 'Item Name', 'Product Cat', 'Dimenssion(lXb)', 'GSM', 'Unit', 'Company Name', 'Opening Quantity', 'Closing Quantity',	'Price'
+        );
 
-         $callback = function () use ($excel, $columns) {
-            $file = fopen('php://output', 'w');
-            fputcsv($file, $columns);
-            $count = 0;
-             foreach ($excel as $key=>$task) {
-                $row['SL']       = ++$key;
-                $row['Item Code']       = $task->item_code;
-                $row['Item Name']       = $task->item_name;
-                $row['Product Cat']      = $task->product->product_name;
-                $row['Dimenssion(lXb)']    = $task->dimension->code;
-                $row['GSM']     = $task->gsmdetails->gsm_name;
-                $row['Unit']       = $task->unit->unit;
-                $row['Company Name']      = $task->company->company_name;
-                $row['Opening Quantity'] = $task->opening_quantity;
-                $row['Closing Quantity'] = $task->closing_quantity;
-                $row['Price']            = $task->price;
+        $callback = function () use ($excel, $columns) {
+        $file = fopen('php://output', 'w');
+        fputcsv($file, $columns);
+        $count = 0;
+            foreach ($excel as $key=>$task) {
+            $row['SL']       = ++$key;
+            $row['Item Code']       = $task->item_code;
+            $row['Item Name']       = $task->item_name;
+            $row['Product Cat']      = $task->product->product_name;
+            $row['Dimenssion(lXb)']    = $task->dimension->code;
+            $row['GSM']     = $task->gsmdetails->gsm_name;
+            $row['Unit']       = $task->unit->unit;
+            $row['Company Name']      = $task->company->company_name;
+            $row['Opening Quantity'] = $task->opening_quantity;
+            $row['Closing Quantity'] = $task->closing_quantity;
+            $row['Price']            = $task->price;
 
 
-                fputcsv($file, array(
-                    $row['SL'],
-                    $row['Item Code'],
-                    $row['Item Name'],
-                    $row['Product Cat'],
-                    $row['Dimenssion(lXb)'],
-                    $row['GSM'],
-                    $row['Unit'],
-                    $row['Company Name'],
-                    $row['Opening Quantity'],
-                    $row['Closing Quantity'],
-                    $row['Price'],
-                ));
-             }
-             fclose($file);
-         };
-         return response()->stream($callback, 200, $headers);
+            fputcsv($file, array(
+                $row['SL'],
+                $row['Item Code'],
+                $row['Item Name'],
+                $row['Product Cat'],
+                $row['Dimenssion(lXb)'],
+                $row['GSM'],
+                $row['Unit'],
+                $row['Company Name'],
+                $row['Opening Quantity'],
+                $row['Closing Quantity'],
+                $row['Price'],
+            ));
+            }
+            fclose($file);
+        };
+        return response()->stream($callback, 200, $headers);
     }
 }

@@ -11,22 +11,22 @@ class AlterTableItemsChangeCurrentStock extends Migration
      *
      * @return void
      */
-    public function up()
-    {
-        Schema::table('items', function (Blueprint $table) {
-            $table->float('current_stock')->change();
-        });
-    }
+        public function up()
+        {
+            Schema::table('items', function (Blueprint $table) {
+                $table->float('current_stock')->change();
+            });
+        }
 
     /**
      * Reverse the migrations.
      *
      * @return void
      */
-    public function down()
-    {
-        Schema::table('items', function (Blueprint $table) {
-            //
-        });
-    }
+        public function down()
+        {
+            Schema::table('items', function (Blueprint $table) {
+                //
+            });
+        }
 }
