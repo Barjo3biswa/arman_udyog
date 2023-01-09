@@ -58,4 +58,19 @@
             <label for="delivery_by1" class="col-form-label">Transport</label>
         </div>
     </div>
+
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label"><strong>Total Amount</strong></label>
+        <label class="col-sm-4 col-form-label"><strong>: {{$job_card->job_order->total_amount}}</strong></label>
+    </div>
+
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label"><strong>Advance Amount</strong></label>
+        <label class="col-sm-4 col-form-label"><strong>: {{$job_card->job_order->advance_amount}}</strong></label>
+    </div>
+
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label"><strong>Balance Amount</strong></label>
+        <label class="col-sm-4 col-form-label"><strong>: {{$job_card->job_order->balance_amount}}</strong></label>
+    </div>
 </div>

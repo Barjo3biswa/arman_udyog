@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 
 use App\Models\Customer;
+use App\Models\Item;
 use App\Models\JobCard as ModelsJobCard;
 use App\Models\JobOrder;
 use Livewire\Component;
@@ -18,6 +19,8 @@ class JobCard extends Component
     public $customer,$name,$email,$phone,$address; //Customer details Controll
    // Job Order Controll
     public $customer_name_jo,$phone_no_jo,$email_jo,$address_jo,$job_details_jo,$quantity_jo,$size_jo,$colour_jo,$paper_jo,$finishing_jo,$packaging_details_jo,$date_of_delivery_jo,$delivery_by_jo;
+    public $plates,$papers;
+    public $total_amount,$advance_amount,$balance_amount;
 
     public function mount($id)
     {
@@ -31,7 +34,9 @@ class JobCard extends Component
     public function render()
     {
         $this->customer = Customer::/* where('name','like','%'.$this->customer_name.'%') ->*/get();
-
+        $this->plates   = Item::where('product_id',3)->get();
+        $this->papers   = Item::where('product_id',1)->get();
+        // dd($this->plates);
         return view('livewire.job-card');
     }
 
@@ -229,7 +234,8 @@ class JobCard extends Component
         // dd("ok");
         try{
             JobOrder::updateOrcreate(
-                [ 'cob_card_id' => $this->current_id ],[
+                [   'cob_card_id' => $this->current_id ],
+                [
                     'cob_card_id'      => $this->current_id,
                     'customer_name'    => $this->customer_name_jo,
                     'job_details'	   => $this->job_details_jo,
@@ -241,6 +247,9 @@ class JobCard extends Component
                     'packaging_details'=> null,
                     'delivery_date'	   => $this->date_of_delivery_jo,
                     'delivery_by'      => $this->delivery_by_jo,
+                    'total_amount'     => $this->total_amount,
+                    'advance_amount'   => $this->advance_amount,
+                    'balance_amount'   => $this->balance_amount,
                 ]);
             $jobcarddetails = ModelsJobCard::where('id',$this->current_id)->first();
             if($jobcarddetails->status=='Post_Press'){
@@ -289,5 +298,18 @@ class JobCard extends Component
         }catch(\Exception $e){
             $this->dispatchBrowserEvent('closeCustomerformwithException');
         }
+    }
+
+    public function changePaper()
+    {
+        $gsm_size= Item::where('id',$this->paper_type)->first();
+        $this->gsm = $gsm_size->gsmdetails->gsm_name;
+        $this->paper_cutting_size = $gsm_size->dimension->code;
+        // dd($gsm_size);
+    }
+
+    public function balanceAmount()
+    {
+        $this->balance_amount=$this->total_amount-$this->advance_amount;
     }
 }

@@ -9,7 +9,7 @@
     </div>
     <div class="form-group row">
         <label class="col-sm-2 col-form-label">Paper Type</label>
-        <label class="col-sm-4 col-form-label"><strong>: {{$job_card->paper_type}}</strong></label>
+        <label class="col-sm-4 col-form-label"><strong>: {{$job_card->papertype->item_code}}</strong></label>
         <label class="col-sm-2 col-form-label">Paper Supplied By</label>
         <div class="col-sm-2">
             <input type="radio" {{$job_card->paper_supplied_by=='By Party'? 'checked' : 'disabled'}}>

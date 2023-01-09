@@ -102,9 +102,16 @@
                                     </div>
 
                                     <div class="form-group row">
-                                        <label class="col-sm-2 col-form-label"><strong>CTP Size</strong></label>
+                                        <label class="col-sm-2 col-form-label"><strong>Plate Size</strong></label>
                                         <div class="col-sm-4">
-                                            <input type="text" class="form-control" wire:model="ctp_size">
+                                            {{-- <input type="text" class="form-control" wire:model="ctp_size"> --}}
+
+                                            <select class="form-control" wire:model="ctp_size">
+                                                <option value="">--Select--</option>
+                                                @foreach ($plates as $plate)
+                                                    <option value="{{$plate->id}}" {{$ctp_size==$plate->id?'selected':''}}>{{$plate->item_code}}</option>
+                                                @endforeach
+                                            </select>
                                         </div>
                                     </div>
                                     <div class="form-group row">
@@ -136,7 +143,13 @@
                                     <div class="form-group row">
                                         <label class="col-sm-2 col-form-label"><strong>Paper Type</strong></label>
                                         <div class="col-sm-4">
-                                            <input type="text" class="form-control" wire:model="paper_type">
+                                            {{-- <input type="text" class="form-control" wire:model="paper_type"> --}}
+                                            <select class="form-control" wire:model="paper_type" wire:change="changePaper">
+                                                <option value="">--Select--</option>
+                                                @foreach ($papers as $paper)
+                                                    <option value="{{$paper->id}}" {{$ctp_size==$paper->id?'selected':''}}>{{$paper->item_code}}</option>
+                                                @endforeach
+                                            </select>
                                         </div>
                                         <label class="col-sm-2 col-form-label"><strong>Paper Supplied By</strong></label>
                                         <div class="col-sm-2">
@@ -396,6 +409,28 @@
                                             <label for="delivery_by1" class="col-form-label">Transport</label>
                                         </div>
                                     </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-sm-2 col-form-label"><strong>Total Amount</strong></label>
+                                        <div class="col-sm-4">
+                                            <input type="text" class="form-control" wire:model="total_amount">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-sm-2 col-form-label"><strong>Advance Amount</strong></label>
+                                        <div class="col-sm-4">
+                                            <input type="text" class="form-control" wire:model="advance_amount" wire:change="balanceAmount">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-sm-2 col-form-label"><strong>Balance Amount</strong></label>
+                                        <div class="col-sm-4">
+                                            <input type="text" class="form-control" wire:model="balance_amount">
+                                        </div>
+                                    </div>
+
                                     <div class="form-group row">
                                         <div class="col-sm-6">
                                             <input type="submit" class="btn btn-primary" value="Generate Order" onclick="return confirm('Yoy Can`t modify After This Step');"
@@ -464,16 +499,10 @@
 
 
 <script>
-    //  $(document).ready(function() {
-    //     $('#customer_name').select2({
-    //         create:true
-    //     });
-    // });
     $(document).ready(function () {
         $('#customer_name').select2();
         $('#customer_name').on('change', function (e) {
             var data = $('#customer_name').select2("val");
-            // @this.set('ottPlatform', data);
         });
     });
 </script>

@@ -53,7 +53,7 @@
 
     <div class="form-group row">
         <label class="col-sm-2 col-form-label">Plate Size</label>
-        <label class="col-sm-4 col-form-label"><strong>: {{$job_card->ctp_size}}</strong></label>
+        <label class="col-sm-4 col-form-label"><strong>: {{$job_card->platesize->item_code}}</strong></label>
     </div>
     <div class="form-group row">
         <label class="col-sm-2 col-form-label">CTP Type</label>

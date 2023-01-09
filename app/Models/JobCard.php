@@ -21,4 +21,14 @@ class JobCard extends Model
     {
         return $this->hasOne(JobOrder::class, 'cob_card_id','id');
     }
+
+    public function platesize()
+    {
+        return $this->hasOne(Item::class, 'id','ctp_size');
+    }
+
+    public function papertype()
+    {
+        return $this->hasOne(Item::class, 'id','paper_type');
+    }
 }
