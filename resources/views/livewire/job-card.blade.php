@@ -31,7 +31,7 @@
                                     {{-- @if ($job_order==false) --}}
                                     <div class="form-group row">
                                         <div class="col md-12" style="align-content: center;">
-                                            <button class="btn btn-{{$pre_press==true ? 'primary' :'secondary' }}" wire:click="formStep('Pre_Press')">Pre Press</button>
+                                            <button class="btn btn-{{$pre_press==true ? 'primary' :'secondary' }}" wire:click="formStep('Pre_Press')">Pre Press {{$job_order}}</button>
                                             <button class="btn btn-{{$press==true ? 'primary' :'secondary' }}" wire:click="formStep('Press')">Press</button>
                                             <button class="btn btn-{{$post_press==true ? 'primary' :'secondary' }}" wire:click="formStep('Post_Press')">Post Press</button>
                                             <button class="btn btn-{{$job_order==true ? 'primary' :'secondary' }}" wire:click="formStep('Order_Generated')">Job Order</button>
@@ -40,10 +40,26 @@
                                     {{-- @endif --}}
                                 <form wire:submit.prevent="savePrePress" class="reset-form">
                                     @if ($pre_press==true)
+                                    <div class="form-group row" wire:ignore>
+                                        <label class="col-sm-2 col-form-label"><strong>Customer's Name</strong></label>
+                                        <div class="col-sm-4">
+                                            <select class="form-control" id="select2-dropdown" wire:model="customer_name">
+                                                <option value="">--Select--</option>
+                                                @foreach ($customer as $cust)
+                                                    <option value="{{$cust->id}}" {{$customer_name==$cust->id?'selected':''}}>{{$cust->name}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <input type="hidden" id="cust_id" wire:model="customer_name">
+                                        <div class="col-sm-2">
+                                            <span class="btn btn-warning" wire:click="addCustomer" {{-- data-toggle="modal" data-target=".bd-example-modal-lg" --}}>Add Customer</span>
+                                        </div>
+                                    </div>
+
                                     <div class="form-group row">
                                         <label class="col-sm-2 col-form-label"><strong>Job Date</strong></label>
-                                        <div class="col-sm-4">
-                                            <input type="date" class="form-control" {{-- id='CalendarDateTime' --}} wire:model="job_date">
+                                        <div class="col-sm-4" wire:ignore>
+                                            <input type="date" class="form-control" id='CalendarDateTime' wire:model="job_date">
                                         </div>
 
                                         <label class="col-sm-2 col-form-label"><strong>Job Details</strong></label>
@@ -51,21 +67,7 @@
                                             <input type="text" class="form-control" wire:model="job_details">
                                         </div>
                                     </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-2 col-form-label"><strong>Customer's Name</strong></label>
-                                        <div class="col-sm-4">
-                                            {{-- <input type="text" class="form-control" wire:model="customer_name"> --}}
-                                            <select class="form-control" id="customer_name" wire:model="customer_name">
-                                                <option value="">--Select--</option>
-                                                @foreach ($customer as $cust)
-                                                    <option value="{{$cust->id}}" {{$customer_name==$cust->id?'selected':''}}>{{$cust->name}}</option>
-                                                @endforeach
-                                              </select>
-                                        </div>
-                                        <div class="col-sm-2">
-                                            <span class="btn btn-warning" wire:click="addCustomer" {{-- data-toggle="modal" data-target=".bd-example-modal-lg" --}}>Add Customer</span>
-                                        </div>
-                                    </div>
+
                                     <div class="form-group row">
                                         <label class="col-sm-2 col-form-label"><strong>Design Supplied By</strong></label>
                                         <div class="col-sm-2">
@@ -494,16 +496,15 @@
     </div>
 </div>
 
+{{-- @once
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/zebra_datepicker@latest/dist/css/default/zebra_datepicker.min.css">
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/zebra_datepicker@latest/dist/zebra_datepicker.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+
+@endonce --}}
 
 
 
-
-<script>
-    $(document).ready(function () {
-        $('#customer_name').select2();
-        $('#customer_name').on('change', function (e) {
-            var data = $('#customer_name').select2("val");
-        });
-    });
-</script>
 

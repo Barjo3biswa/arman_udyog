@@ -36,6 +36,7 @@ class JobCard extends Component
         $this->customer = Customer::/* where('name','like','%'.$this->customer_name.'%') ->*/get();
         $this->plates   = Item::where('product_id',3)->get();
         $this->papers   = Item::where('product_id',1)->get();
+
         // dd($this->plates);
         return view('livewire.job-card');
     }
@@ -163,6 +164,7 @@ class JobCard extends Component
             $this->press=false;
             $this->post_press=false;
             $this->job_order=true;
+            $this->edit();
         }catch(\Exception $e){
             $this->alert_msg="Something Went wrong.....";
             $this->alert_type="danger";
@@ -268,6 +270,7 @@ class JobCard extends Component
 
     public function addCustomer()
     {
+        $this->dispatchBrowserEvent('select2');
         $this->dispatchBrowserEvent('openCustomerform');
     }
     // public function saveCustomer()

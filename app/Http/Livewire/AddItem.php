@@ -20,7 +20,7 @@ class AddItem extends Component
     public $products,$units,$dimensions,$gsms,$items,$companys;
     public $product,$unit,$dimension,$gsm,$item,$quantity,$price,$item_name,$company;
     public $item_code;
-    public $filter_item_name, $filter_item_stock, $filter_item_unit;
+    public $filter_item_name, $filter_item_stock, $filter_item_unit,$filter_item_product;
     public $alert_msg,$alert_status=false,$alert_type;
 
     public function increment()
@@ -42,6 +42,8 @@ class AddItem extends Component
             $this->items = $this->items->where('unit_id',$this->filter_item_unit);
         }if($this->filter_item_stock != null){
             $this->items = $this->items->where('current_stock','LIKE','%'.$this->filter_item_stock.'%');
+        }if($this->filter_item_product != null){
+            $this->items = $this->items->where('product_id',$this->filter_item_product);
         }
         $this->items = $this->items->get();
 
@@ -76,8 +78,15 @@ class AddItem extends Component
         $dimensn = ItemDimension::where('id',$this->dimension)->first();
         $gsm     = ItemGSM::where('id',$this->gsm)->first();
         $company_code = ItemCompany::where('id',$this->company)->first();
+        $unit = Unit::where('id',$this->unit)->first();
         try{
-            $this->item_code=$this->item_name.'('.$code->product_code.'-'.$company_code->company_code.'-'.$dimensn->code.'-'.$gsm->gsm_name.')';
+            $product_test=$code->product_code;
+            $unit_test=$unit->code;
+            $company_test=$company_code->company_code??'na';
+            $dimension_test=$dimensn->code??'na';
+            $gsm_test=$gsm->gsm_name??'na';
+            $this->item_code=$this->item_name."(".$product_test."-".$unit_test."-".$dimension_test."-".$gsm_test."-".$company_test.")";
+            // $this->item_code=$this->item_name.'('.$code->product_code.'-'.$company_code->company_code.'-'.$dimensn->code.'-'.$gsm->gsm_name.')';
         }catch(\Exception $e){
             $this->item_code=null;
         }
@@ -86,7 +95,6 @@ class AddItem extends Component
 
     public function save()
     {
-        // dd($this->edit_id);
         DB::beginTransaction();
         try{
             DB::commit();
@@ -98,9 +106,9 @@ class AddItem extends Component
                 'product_id'      => $this->product,
                 'unit_id'         => $this->unit,
                 'unit_name'       => $unit_name->unit,
-                'dimension_id'    => $this->dimension,
-                'thickess_id'     => $this->gsm,
-                'company_id'      => $this->company,
+                'dimension_id'    => $this->dimension==0?null:$this->dimension,
+                'thickess_id'     => $this->gsm==0?null:$this->gsm,
+                'company_id'      => $this->company==0?null:$this->company,
                 'opening_quantity'   => $this->quantity,
                 'closing_quantity'=> $this->quantity,
                 'current_stock'   => $this->quantity,
@@ -113,7 +121,6 @@ class AddItem extends Component
             $this->alert_type="success";
             $this->alert_status=true;
         }catch(\Exception $e){
-            // dd($e);
             DB::rollBack();
             $this->alert_msg="Oppss!! Somthing Went Wrong..";
             $this->alert_type="danger";
@@ -150,10 +157,84 @@ class AddItem extends Component
         }
     }
 
-    public function exportToExcel()
+    // public function exportToExcel()
+    // {
+    //     $excel    = Item::with('gsmdetails')->get();
+    // //  dd($excel);
+    //     $fileName = "Itm_list".'.csv';
+    //     $headers = array(
+    //         "Content-type"        => "text/csv",
+    //         "Content-Disposition" => "attachment; filename=$fileName",
+    //         "Pragma"              => "no-cache",
+    //         "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+    //         "Expires"             => "0",
+    //     );
+
+    //     $columns = array(
+
+    //     'Sl', 'Item Code', 'Item Name', 'Product Cat', 'Dimenssion(lXb)', 'GSM', 'Unit', 'Company Name', 'Opening Quantity', 'Closing Quantity',	'Price'
+    //     );
+
+    //     $callback = function () use ($excel, $columns) {
+    //     $file = fopen('php://output', 'w');
+    //     fputcsv($file, $columns);
+    //     $count = 0;
+    //         foreach ($excel as $key=>$task) {
+    //         $row['SL']       = ++$key;
+    //         $row['Item Code']       = $task->item_code;
+    //         $row['Item Name']       = $task->item_name;
+    //         $row['Product Cat']      = $task->product->product_name;
+    //         $row['Dimenssion(lXb)']    = $task->dimension->code;
+    //         $row['GSM']     = $task->gsmdetails->gsm_name;
+    //         $row['Unit']       = $task->unit->unit;
+    //         $row['Company Name']      = $task->company->company_name;
+    //         $row['Opening Quantity'] = $task->opening_quantity;
+    //         $row['Closing Quantity'] = $task->closing_quantity;
+    //         $row['Price']            = $task->price;
+
+
+    //         fputcsv($file, array(
+    //             $row['SL'],
+    //             $row['Item Code'],
+    //             $row['Item Name'],
+    //             $row['Product Cat'],
+    //             $row['Dimenssion(lXb)'],
+    //             $row['GSM'],
+    //             $row['Unit'],
+    //             $row['Company Name'],
+    //             $row['Opening Quantity'],
+    //             $row['Closing Quantity'],
+    //             $row['Price'],
+    //         ));
+    //         }
+    //         fclose($file);
+    //     };
+    //     return response()->stream($callback, 200, $headers);
+    // }
+
+    public static function exportToExcel()
     {
+
+        $data=[
+            'Item Code'         => 'item_code',
+            'Item Name'         => 'item_name',
+            'Product Cat'       => 'product->product_name??null',
+            'Dimenssion(lXb)'   => 'dimension->code??null',
+            'GSM'               => 'gsmdetails->gsm_name??null',
+            'Unit'              => 'unit->unit??null',
+            'Company Name'      => 'company->company_name??null',
+            'Opening Quantity'  => 'opening_quantity',
+            'Closing Quantity'  => 'closing_quantity',
+            'Price'             => 'price',
+        ];
+
+        $columns=[];
+        $col_relation = [];
+        foreach( $data as $key=>$d){
+            $columns[]=$key;
+            $col_relation[] = $d;
+        }
         $excel    = Item::with('gsmdetails')->get();
-    //  dd($excel);
         $fileName = "Itm_list".'.csv';
         $headers = array(
             "Content-type"        => "text/csv",
@@ -162,43 +243,19 @@ class AddItem extends Component
             "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
             "Expires"             => "0",
         );
-
-        $columns = array(
-
-        'Sl', 'Item Code', 'Item Name', 'Product Cat', 'Dimenssion(lXb)', 'GSM', 'Unit', 'Company Name', 'Opening Quantity', 'Closing Quantity',	'Price'
-        );
-
-        $callback = function () use ($excel, $columns) {
+        $callback = function () use ($excel, $columns,$col_relation) {
         $file = fopen('php://output', 'w');
         fputcsv($file, $columns);
         $count = 0;
+        $array = '';
+        $dynamic_array = [];
             foreach ($excel as $key=>$task) {
-            $row['SL']       = ++$key;
-            $row['Item Code']       = $task->item_code;
-            $row['Item Name']       = $task->item_name;
-            $row['Product Cat']      = $task->product->product_name;
-            $row['Dimenssion(lXb)']    = $task->dimension->code;
-            $row['GSM']     = $task->gsmdetails->gsm_name;
-            $row['Unit']       = $task->unit->unit;
-            $row['Company Name']      = $task->company->company_name;
-            $row['Opening Quantity'] = $task->opening_quantity;
-            $row['Closing Quantity'] = $task->closing_quantity;
-            $row['Price']            = $task->price;
-
-
-            fputcsv($file, array(
-                $row['SL'],
-                $row['Item Code'],
-                $row['Item Name'],
-                $row['Product Cat'],
-                $row['Dimenssion(lXb)'],
-                $row['GSM'],
-                $row['Unit'],
-                $row['Company Name'],
-                $row['Opening Quantity'],
-                $row['Closing Quantity'],
-                $row['Price'],
-            ));
+                foreach($col_relation as $k=>$c){
+                    $val=eval('return $task->'.$c.';')??null;
+                    $dynamic_array[] = $val;
+                }
+                fputcsv($file, $dynamic_array);
+                $dynamic_array = [];
             }
             fclose($file);
         };

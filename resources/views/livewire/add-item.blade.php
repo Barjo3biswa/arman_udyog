@@ -64,8 +64,8 @@
                                             <label class="col-sm-2 col-form-label">Select Dimensn</label>
                                             <div class="col-sm-4">
                                                 <select wire:model="dimension" id="dimension" class="form-control"
-                                                    wire:click="getItemCode" required>
-                                                    <option value="">--Select--</option>
+                                                    wire:click="getItemCode">
+                                                    <option value="0">--Select--</option>
                                                     @foreach ($dimensions as $dimension)
                                                         <option value="{{ $dimension->id }}"
                                                             {{ old('dimension') == $dimension->id ? 'selected' : '' }}>
@@ -76,8 +76,8 @@
                                             <label class="col-sm-2 col-form-label">Select GSM</label>
                                             <div class="col-sm-4">
                                                 <select wire:model="gsm" id="gsm" class="form-control"
-                                                    wire:click="getItemCode" required>
-                                                    <option value="">--Select--</option>
+                                                    wire:click="getItemCode">
+                                                    <option value="0">--Select--</option>
                                                     @foreach ($gsms as $gsm)
                                                         <option value="{{ $gsm->id }}"
                                                             {{ old('gsm') == $gsm->id ? 'selected' : '' }}>
@@ -91,13 +91,13 @@
                                             <label class="col-sm-2 col-form-label">Item Name</label>
                                             <div class="col-sm-4">
                                                 <input type="text" wire:model="item_name" id="item_name"
-                                                    wire:click="getItemCode" class="form-control" required>
+                                                    wire:keyup="getItemCode" class="form-control" required>
                                             </div>
                                             <label class="col-sm-2 col-form-label">Company Name</label>
                                             <div class="col-sm-4">
                                                 <select wire:model="company" id="company" class="form-control"
-                                                    wire:click="getItemCode" required>
-                                                    <option value="">--Select--</option>
+                                                    wire:click="getItemCode">
+                                                    <option value="0">--Select--</option>
                                                     @foreach ($companys as $company)
                                                         <option value="{{ $company->id }}"
                                                             {{ old('company') == $company->id ? 'selected' : '' }}>
@@ -156,7 +156,6 @@
 
                         <label class="col-sm-2 col-form-label">Item Unit</label>
                         <div class="col-sm-4">
-                            {{-- <input type="text" class="form-control" wire:model="filter_item_unit" id="filter_item_unit"> --}}
                             <select wire:model="filter_item_unit" id="filter_item_unit" class="form-control">
                                 <option value="">--Select--</option>
                                 @foreach ($units as $unit)
@@ -170,21 +169,24 @@
                     </div>
 
                     <div class="card-block row"  style="padding: 6px 25px;">
+                        <label class="col-sm-2 col-form-label">Product</label>
+                        <div class="col-sm-4">
+                            <select wire:model="filter_item_product" id="filter_item_unit" class="form-control">
+                                <option value="">--All--</option>
+                                @foreach ($products as $product)
+                                    <option value="{{ $product->id }}"
+                                        {{ old('product') == $product->id ? 'selected' : '' }}>
+                                        {{ $product->product_name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+
                         <label class="col-sm-2 col-form-label">Item Current Quantity</label>
                         <div class="col-sm-4">
                             <input type="text" class="form-control" wire:model="filter_item_stock" id="filter_item_stock">
                         </div>
-
-                        {{-- <label class="col-sm-2 col-form-label">
-                            <button class="btn btn-primary">Filter</button>
-                        </label> --}}
-
                     </div>
-
-                {{-- <a href="{{ route('admin.item.add_item') }}" class="btn btn-primary btn-xs">Add New
-                            Item</a> --}}
-
-                {{-- <input type="button" class="btn btn-primary btn-xs" value="Add New Dimension"> --}}
             </div>
             <div class="card">
                 <div class="page-body">
