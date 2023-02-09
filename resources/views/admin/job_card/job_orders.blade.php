@@ -3,6 +3,51 @@
     <!-- Main-body start -->
     <div class="main-body">
         <div class="page-wrapper">
+            <div class="page-header card">
+                <div class="card-block row">
+                    <div class="col-md-2">
+                        <h5 class="m-b-10">Job Orders Filter</h5>
+                    </div>
+                </div>
+                <form action="">
+                <div class="card-block row" style="padding: 2px 25px;">
+                    <label class="col-sm-2 col-form-label">Customer Name/Phone No</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" name="customer" value="{{Request()->get('customer')}}">
+                    </div>
+                    <label class="col-sm-2 col-form-label">Order Status</label>
+                    <div class="col-sm-4">
+                        <select id="filter_item_unit" class="form-control" name="status" >
+                            <option value="">--Select--</option>
+                            <option value="Pre_Press">Pre Press</option>
+                            <option value="Press">Press</option>
+                            <option value="Post_Press">Post Press</option>
+                            <option value="Order_delivered">Order_delivered</option>
+                            <option value="Order_Generated">Order_Generated</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="card-block row" style="padding: 6px 25px;">
+                    <label class="col-sm-2 col-form-label">Formdate</label>
+                    <div class="col-sm-4">
+                        <input type="date" class="form-control" name="form_date" value="{{Request()->get('form_date')}}">
+                    </div>
+
+                    <label class="col-sm-2 col-form-label">Todate</label>
+                    <div class="col-sm-4">
+                        <input type="date" class="form-control" name="to_date" value="{{Request()->get('to_date')}}">
+                    </div>
+                </div>
+                <div class="card-block row" style="padding: 6px 25px;">
+                    <div class="col-sm-4">
+                        <input type="submit" class="btn btn-primary" value="Search">
+                        <a href="{{route('admin.job_orders')}}" class="btn btn-primary">Reset</a>
+                    </div>
+                </div>
+                </form>
+            </div>
+
             <div class="card">
                 <div class="card-header">
                     <div class="row">
@@ -10,7 +55,6 @@
                             <h5>Job Orders</h5>
                         </div>
                     </div>
-
                 </div>
                 <div class="card-block table-border-style">
                     <div class="table-responsive">
@@ -48,19 +92,20 @@
                                             @endif
                                         </th>
                                         <th>
-                                            @if ($job->status=='Order_Generated')
+                                            @if ($job->status == 'Order_Generated')
                                                 <a href="{{ route('admin.job_card_view', ['id' => Crypt::encrypt($job->id)]) }}"
                                                     class="btn btn-primary">View & Print</a>
-                                                <button class="btn btn-primary" onclick="SubmitAmount({{ $job->id}})"
+                                                <button class="btn btn-primary" onclick="SubmitAmount({{ $job->id }})"
                                                     data-toggle="modal" data-target="#exampleModal">
                                                     Deliver & Payment
                                                 </button>
-                                            @elseif ($job->status=='Order_delivered')
-                                               <a href="{{ route('admin.job_card_view', ['id' => Crypt::encrypt($job->id)]) }}"
-                                                class="btn btn-primary">View & Print</a>
-                                                @if($job->job_order->balance_amount>0)
-                                                    <button class="btn btn-primary" onclick="SubmitAmount({{ $job->id}})"
-                                                        data-toggle="modal" data-target="#exampleModal">
+                                            @elseif ($job->status == 'Order_delivered')
+                                                <a href="{{ route('admin.job_card_view', ['id' => Crypt::encrypt($job->id)]) }}"
+                                                    class="btn btn-primary">View & Print</a>
+                                                @if ($job->job_order->balance_amount > 0)
+                                                    <button class="btn btn-primary"
+                                                        onclick="SubmitAmount({{ $job->id }})" data-toggle="modal"
+                                                        data-target="#exampleModal">
                                                         Deliver & Payment
                                                     </button>
                                                 @endif
@@ -93,7 +138,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form action="{{route('admin.save_collect')}}" method="post">
+                <form action="{{ route('admin.save_collect') }}" method="post">
                     @csrf
                     <div class="modal-body">
                         <div class="form-group">
@@ -112,7 +157,7 @@
                                     <input type="hidden" name="job_id" id="job_id">
                                 </div>
                                 <div class="col-md-1">
-                                Yes
+                                    Yes
                                 </div>
                                 <div class="col-md-1">
                                     <input type="radio" name="deliver_or_not" value="0">

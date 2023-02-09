@@ -29,7 +29,7 @@
                     <div class="col-md-6 col-xl-3">
                         <div class="card bg-c-yellow order-card">
                             <div class="card-block">
-                                <h6 class="m-b-20">Total Amount</h6>
+                                <h6 class="m-b-20">Total Sale</h6>
                                 <h2 class="text-right"><i class="ti-reload f-left"></i><span>{{App\Helper\helper::totalAmount('all')}}</span>
                                 </h2>
                                 <p class="m-b-0">This Month<span class="f-right">{{App\Helper\helper::totalAmount('this_month')}}</span></p>
@@ -39,10 +39,10 @@
                     <div class="col-md-6 col-xl-3">
                         <div class="card bg-c-pink order-card">
                             <div class="card-block">
-                                <h6 class="m-b-20">Total Profit</h6>
-                                <h2 class="text-right"><i class="ti-wallet f-left"></i><span>$9,562</span>
+                                <h6 class="m-b-20">Amount To Recover</h6>
+                                <h2 class="text-right"><i class="ti-wallet f-left"></i><span>{{App\Helper\helper::totalCollection('all')}}</span>
                                 </h2>
-                                <p class="m-b-0">This Month<span class="f-right">$542</span></p>
+                                <p class="m-b-0">This Month<span class="f-right">{{App\Helper\helper::totalCollection('this_month')}}</span></p>
                             </div>
                         </div>
                     </div>

@@ -21,11 +21,23 @@ class jobCardController extends Controller
         return view('admin.job_card.job_card',compact('editable_id'));
     }
 
-    public function jobOrders()
+    public function jobOrders(Request $request)
     {
-
-        $job_cards = JobCard::with('job_order')->orderBy('id','DESC')->paginate(100);
-        // dd($job_cards);
+        $job_cards = JobCard::with('job_order');
+        if($request->customer){
+            $job_cards=$job_cards->whereHas('customerName',function($query) use($request){
+                return $query->where("name", $request->customer)->orWhere("phone_no", $request->customer);
+            })->with(["customerName"=>function($q) use($request){
+                return $q->where("name", $request->customer)->orWhere("phone_no", $request->customer);
+            }]);
+        }
+        if($request->status){
+            $job_cards=$job_cards->where('status',$request->status);
+        }
+        if($request->form_date || $request->to_date){
+            $job_cards=$job_cards->whereBetween('job_date',array($request->form_date,$request->to_date));
+        }
+        $job_cards = $job_cards->orderBy('id','DESC')->paginate(100);
         return view('admin.job_card.job_orders',compact('job_cards'));
     }
 

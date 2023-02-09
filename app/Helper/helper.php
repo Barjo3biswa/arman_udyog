@@ -22,4 +22,12 @@ class helper{
             return JobOrder::sum('total_amount');
         }
     }
+    public static function totalCollection($flag){
+        if($flag=='this_month'){
+            return JobOrder::whereMonth('created_at', date('m'))
+                             ->whereYear('created_at', date('Y'))->sum('total_amount');
+        }else{
+            return JobOrder::sum('total_amount');
+        }
+    }
 }
