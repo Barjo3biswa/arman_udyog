@@ -183,5 +183,8 @@
             $('#job_id').empty();
             $('#job_id').val(id);
         }
+        $( document ).ready(function() {
+            jQuery('#mobile-collapse').click();
+        });
     </script>
 @endsection
