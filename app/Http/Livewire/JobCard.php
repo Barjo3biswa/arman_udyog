@@ -6,6 +6,8 @@ use App\Models\Customer;
 use App\Models\Item;
 use App\Models\JobCard as ModelsJobCard;
 use App\Models\JobOrder;
+use App\Models\MachineType;
+use App\Models\PaymentTransaction;
 use Livewire\Component;
 
 class JobCard extends Component
@@ -19,7 +21,7 @@ class JobCard extends Component
     public $customer,$name,$email,$phone,$address; //Customer details Controll
    // Job Order Controll
     public $customer_name_jo,$phone_no_jo,$email_jo,$address_jo,$job_details_jo,$quantity_jo,$size_jo,$colour_jo,$paper_jo,$finishing_jo,$packaging_details_jo,$date_of_delivery_jo,$delivery_by_jo;
-    public $plates,$papers;
+    public $plates,$papers,$machines;
     public $total_amount,$advance_amount,$balance_amount;
 
     public function mount($id)
@@ -36,6 +38,7 @@ class JobCard extends Component
         $this->customer = Customer::/* where('name','like','%'.$this->customer_name.'%') ->*/get();
         $this->plates   = Item::where('product_id',3)->get();
         $this->papers   = Item::where('product_id',1)->get();
+        $this->machines = MachineType::get();
 
         // dd($this->plates);
         return view('livewire.job-card');
@@ -45,6 +48,7 @@ class JobCard extends Component
 
     public function formStep($step)
     {
+        // $this->alert_status=false;
         $this->pre_press=false;
         $this->press=false;
         $this->post_press=false;
@@ -58,15 +62,27 @@ class JobCard extends Component
         }elseif($step=="Order_Generated"){
             $this->job_order=true;
         }
+
     }
 
 
     public function savePrePress()
     {
+        $this->validate([
+            'customer_name' => 'required',
+            "job_date"      => 'required',
+            "job_details"   => 'bail|required|max:255',
+            "design_by"     => 'required',
+            'colour'        => 'required',
+            'sub_color'     => 'required',
+            'ctp_size'      => 'required',
+            'ctp_type'      => 'required',
+        ]);
         try{
             $jobcarddetails=ModelsJobCard::updateOrcreate(
                 [ 'id' => $this->current_id ],
                 [
+
                     'job_details' => $this->job_details,
                     'customer_id' => $this->customer_name,
                     'job_date'    => $this->job_date,
@@ -98,36 +114,54 @@ class JobCard extends Component
 
     public function savePress()
     {
-        try{
-            $jobcarddetails=ModelsJobCard::updateOrcreate(
-                [ 'id' => $this->current_id ],
-                [
-                'paper_type'         => $this->paper_type,
-                'paper_supplied_by'	 => $this->paper_sup_by,
-                'gsm'                => $this->gsm,
-                'paper_cutting_size' =>	$this->paper_cutting_size,
-                'press_machine_type' =>	$this->machine_type,
-                'pages'	             => $this->pages,
-                'total_forma'        =>	$this->total_foram,
-                'ss_or_bb'	         => $this->ss_or_bb,
-                'juri_forma'	     => $this->juri_form,
-                'wastage_qty_of_paper' => $this->wastage_qty,
-                'total_impression'     => $this->total_impression,
-            ]);
-            if($jobcarddetails->status=='Pre_Press'){
-                $jobcarddetails->status='Press';
-                $jobcarddetails->save();
-            }
-            $this->alert_msg="Successfully Saved Press Process..";
-            $this->alert_type="success";
-            $this->alert_status=true;
-            $this->pre_press=false;
-            $this->press=false;
-            $this->post_press=true;
-        }catch(\Exception $e){
-            $this->alert_msg="Something Went wrong.....";
+        $status=ModelsJobCard::where('id',$this->current_id)->first();
+        // dd($status->status);
+        if(!in_array($status->status??"", ['Pre_Press','Press','Post_Press'])){
+            $this->alert_msg="Looks Like You Skip Some Previous Steps.";
             $this->alert_type="danger";
             $this->alert_status=true;
+        }else{
+            $this->validate([
+                    'paper_type'  => 'required',
+                    'paper_sup_by'  => 'required',
+                    'gsm'  => 'required',
+                    'paper_cutting_size'  => 'required',
+                    'machine_type'  => 'required',
+                    'pages'  => 'required',
+                    'ss_or_bb'  => 'required',
+            ]);
+            try{
+                $jobcarddetails=ModelsJobCard::updateOrcreate(
+                    [ 'id' => $this->current_id ],
+                    [
+                    'paper_type'         => $this->paper_type,
+                    'paper_supplied_by'	 => $this->paper_sup_by,
+                    'gsm'                => $this->gsm,
+                    'paper_cutting_size' =>	$this->paper_cutting_size,
+                    'press_machine_type' =>	$this->machine_type,
+                    'pages'	             => $this->pages,
+                    'total_forma'        =>	$this->total_foram,
+                    'ss_or_bb'	         => $this->ss_or_bb,
+                    'juri_forma'	     => $this->juri_form,
+                    'wastage_qty_of_paper' => $this->wastage_qty,
+                    'total_impression'     => $this->total_impression,
+                ]);
+                if($jobcarddetails->status=='Pre_Press'){
+                    $jobcarddetails->status='Press';
+                    $jobcarddetails->save();
+                }
+                $this->alert_msg="Successfully Saved Press Process..";
+                $this->alert_type="success";
+                $this->alert_status=true;
+                $this->pre_press=false;
+                $this->press=false;
+                $this->post_press=true;
+            }catch(\Exception $e){
+                // dd($e);
+                $this->alert_msg="Something Went wrong.....";
+                $this->alert_type="danger";
+                $this->alert_status=true;
+            }
         }
     }
 
@@ -135,40 +169,52 @@ class JobCard extends Component
 
     public function savePostPress()
     {
-        try{
-            $jobcarddetails=ModelsJobCard::updateOrcreate(
-                [ 'id' => $this->current_id ],
-                [
-                    'lamination'      => $this->lamination ? 1 : 0,
-                    'uv'	          => $this->uv ? 1 : 0,
-                    'punching'	      => $this->punching ? 1 : 0,
-                    'center_printing' => $this->center_printing ? 1 : 0,
-                    'perfect'	      => $this->perfect ? 1 : 0,
-                    'perforation'	  => $this->perforation ? 1 : 0,
-                    'sl_no'	          => $this->sl_no,
-                    'mounting'	      => $this->mounting_by,
-                    'Others'	      => $this->others,
-                    'date_of_delivery'=> $this->date_of_delivery,
-                    'delivery_by'     => $this->delivery_by
-            ]);
-
-            if($jobcarddetails->status=='Press'){
-                $jobcarddetails->status='Post_Press';
-                $jobcarddetails->save();
-            }
-
-            $this->alert_msg="Successfully Saved Post Process..";
-            $this->alert_type="success";
-            $this->alert_status=true;
-            $this->pre_press=false;
-            $this->press=false;
-            $this->post_press=false;
-            $this->job_order=true;
-            $this->edit();
-        }catch(\Exception $e){
-            $this->alert_msg="Something Went wrong.....";
+        $status=ModelsJobCard::where('id',$this->current_id)->first();
+        if(!in_array($status->status??"", ['Press','Post_Press'])){
+            // dd("ok");
+            $this->alert_msg="Looks Like You Skip Some Previous Steps.";
             $this->alert_type="danger";
             $this->alert_status=true;
+        }else{
+            $this->validate([
+                    'date_of_delivery' => 'required',
+                    'delivery_by'      => 'required',
+            ]);
+            try{
+                $jobcarddetails=ModelsJobCard::updateOrcreate(
+                    [ 'id' => $this->current_id ],
+                    [
+                        'lamination'      => $this->lamination ? 1 : 0,
+                        'uv'	          => $this->uv ? 1 : 0,
+                        'punching'	      => $this->punching ? 1 : 0,
+                        'center_printing' => $this->center_printing ? 1 : 0,
+                        'perfect'	      => $this->perfect ? 1 : 0,
+                        'perforation'	  => $this->perforation ? 1 : 0,
+                        'sl_no'	          => $this->sl_no,
+                        'mounting'	      => $this->mounting_by,
+                        'Others'	      => $this->others,
+                        'date_of_delivery'=> $this->date_of_delivery,
+                        'delivery_by'     => $this->delivery_by
+                ]);
+
+                if($jobcarddetails->status=='Press'){
+                    $jobcarddetails->status='Post_Press';
+                    $jobcarddetails->save();
+                }
+
+                $this->alert_msg="Successfully Saved Post Process..";
+                $this->alert_type="success";
+                $this->alert_status=true;
+                $this->pre_press=false;
+                $this->press=false;
+                $this->post_press=false;
+                $this->job_order=true;
+                $this->edit();
+            }catch(\Exception $e){
+                $this->alert_msg="Something Went wrong.....";
+                $this->alert_type="danger";
+                $this->alert_status=true;
+            }
         }
     }
 
@@ -208,7 +254,14 @@ class JobCard extends Component
             $this->date_of_delivery = $editable_job->date_of_delivery;
             $this->delivery_by = $editable_job->delivery_by;
             $this->jobOrder();
-            $this->formStep($editable_job->status);
+            if($editable_job->status=='Pre_press'){
+                $this->formStep('Press');
+            }else if($editable_job->status=='Press'){
+                $this->formStep('Post_press');
+            }else if($editable_job->status=="Post_Press"){
+                $this->formStep('Order_Generated');
+            }
+
         }
     }
 
@@ -233,38 +286,60 @@ class JobCard extends Component
 
     public function saveAndGenerateOrder()
     {
-        // dd("ok");
-        try{
-            JobOrder::updateOrcreate(
-                [   'cob_card_id' => $this->current_id ],
-                [
-                    'cob_card_id'      => $this->current_id,
-                    'customer_name'    => $this->customer_name_jo,
-                    'job_details'	   => $this->job_details_jo,
-                    'quantity'	       => null,
-                    'size'	           => null,
-                    'colour'	       => $this->colour_jo,
-                    'paper'	           => $this->paper_jo,
-                    'finishing'	       => null,
-                    'packaging_details'=> null,
-                    'delivery_date'	   => $this->date_of_delivery_jo,
-                    'delivery_by'      => $this->delivery_by_jo,
-                    'total_amount'     => $this->total_amount,
-                    'advance_amount'   => $this->advance_amount,
-                    'balance_amount'   => $this->balance_amount,
-                ]);
-            $jobcarddetails = ModelsJobCard::where('id',$this->current_id)->first();
-            if($jobcarddetails->status=='Post_Press'){
-                $jobcarddetails->status='Order_Generated';
-                $jobcarddetails->save();
-            }
-            $this->alert_msg="Order Successfully Generated..";
-            $this->alert_type="success";
-            $this->alert_status=true;
-        }catch(\Exception $e){
-            $this->alert_msg="Something Went wrong.....";
+        $status=ModelsJobCard::where('id',$this->current_id)->first();
+        if(!in_array($status->status??"", ['Post_Press'])){
+            $this->alert_msg="Looks Like You Skip Some Previous Steps.";
             $this->alert_type="danger";
             $this->alert_status=true;
+        }else{
+            $this->validate([
+                'date_of_delivery_jo' => 'required',
+                'delivery_by_jo'   => 'required',
+                'total_amount'     => 'required',
+                'advance_amount'   => 'required',
+                'balance_amount'   => 'required',
+            ]);
+            try{
+                JobOrder::updateOrcreate(
+                    [   'cob_card_id' => $this->current_id ],
+                    [
+                        'cob_card_id'      => $this->current_id,
+                        'customer_name'    => $this->customer_name_jo,
+                        'job_details'	   => $this->job_details_jo,
+                        'quantity'	       => null,
+                        'size'	           => null,
+                        'colour'	       => $this->colour_jo,
+                        'paper'	           => $this->paper_jo,
+                        'finishing'	       => null,
+                        'packaging_details'=> null,
+                        'delivery_date'	   => $this->date_of_delivery_jo,
+                        'delivery_by'      => $this->delivery_by_jo,
+                        'total_amount'     => $this->total_amount,
+                        'advance_amount'   => $this->advance_amount,
+                        'balance_amount'   => $this->balance_amount,
+                    ]);
+                $jobcarddetails = ModelsJobCard::where('id',$this->current_id)->first();
+                if($jobcarddetails->status=='Post_Press'){
+                    $jobcarddetails->status='Order_Generated';
+                    $jobcarddetails->save();
+                }
+
+                $job_orders=JobOrder::where('cob_card_id',$this->current_id)->first();
+                PaymentTransaction::create([
+                'job_card_id' =>$job_orders->cob_card_id,
+                'job_Order_id'=>$job_orders->id,
+                'amount'      =>$this->advance_amount,
+                'remaining'   =>$this->balance_amount,
+            ]);
+                $this->alert_msg="Order Successfully Generated..";
+                $this->alert_type="success";
+                $this->alert_status=true;
+                return redirect()->route('admin.job_orders')->with('success','Successfully Created Job Order..');
+            }catch(\Exception $e){
+                $this->alert_msg="Something Went wrong.....";
+                $this->alert_type="danger";
+                $this->alert_status=true;
+            }
         }
     }
 
@@ -290,6 +365,12 @@ class JobCard extends Component
 
     public function saveCustomer()
     {
+        $this->validate([
+            'name' => 'required',
+            'phone' => 'required|min:10|max:10',
+            'email' => 'required|email',
+            'address' => 'required|max:255',
+        ]);
         try{
             Customer::updateOrcreate([
                 'name'        => $this->name,
@@ -314,5 +395,10 @@ class JobCard extends Component
     public function balanceAmount()
     {
         $this->balance_amount=$this->total_amount-$this->advance_amount;
+    }
+
+    public function closeAlert()
+    {
+        $this->alert_status=false;
     }
 }

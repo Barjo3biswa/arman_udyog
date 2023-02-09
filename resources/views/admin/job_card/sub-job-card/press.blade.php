@@ -4,7 +4,7 @@
     <div class="row">
         <div class="col-md-12" style="text-align: center">
             <h4><u>Press</u>
-                <button class="btn btn-primary not-print" onclick="printDiv('printableArea3')">Print</button></h4>
+                {{-- <button class="btn btn-primary not-print" onclick="printDiv('printableArea3')">Print</button></h4> --}}
         </div>
     </div>
     <div class="form-group row">
@@ -30,7 +30,8 @@
 
     <div class="form-group row">
         <label class="col-sm-2 col-form-label">Press Machine Type</label>
-        <div class="col-sm-2">
+        <label class="col-sm-4 col-form-label"><strong>: {{$job_card->machine->name}}</strong></label>
+        {{-- <div class="col-sm-2">
             <input type="radio" value="Heidelbarg" {{$job_card->press_machine_type=='Heidelbarg'? 'checked' : 'disabled'}}>
             <label for="Heidelbarg" class="col-form-label" >Heidelbarg</label>
         </div>
@@ -41,7 +42,7 @@
         <div class="col-sm-2">
             <input type="radio" value="WEB-578/508" {{$job_card->press_machine_type=='WEB-578/508'? 'checked' : 'disabled'}}>
             <label for="WEB-578/508" class="col-form-label" >WEB-578/508</label>
-        </div>
+        </div> --}}
     </div>
 
     <div class="form-group row">

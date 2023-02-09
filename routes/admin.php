@@ -42,4 +42,6 @@ Route::group(['middleware'=>'admin'], function () {
     Route::get("job_orders",[jobCardController::class,'jobOrders'])->name('admin.job_orders');
 
     Route::get("job_card_view",[jobCardController::class,'viewJobCard'])->name('admin.job_card_view');
+
+    Route::Post("save_collect",[jobCardController::class,'SaveCollect'])->name('admin.save_collect');
 });

@@ -18,11 +18,23 @@
 </style>
 @endsection
 @section('content')
-    <!-- Main-body start -->
 <div id="printableall">
-    {{-- <div class="form-group row">
-        <button class="btn btn-primary not-print" onclick="printDiv('printableall')" style="float:right">Print All</button>
-    </div> --}}
+    <div class="main-body">
+        <div class="page-wrapper">
+            <div class="card">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <button class="btn btn-success" onclick="printDiv('printableArea1')">Print Job Order</button>
+                            <button class="btn btn-success" onclick="printDiv('printableArea2')">Print Pre-Press</button>
+                            <button class="btn btn-success" onclick="printDiv('printableArea3')">Print Press</button>
+                            <button class="btn btn-success" onclick="printDiv('printableArea4')">Print Post-Press</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="main-body">
         <div class="page-wrapper">
             <div class="card" id="printableArea1">

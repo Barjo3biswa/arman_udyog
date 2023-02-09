@@ -15,7 +15,7 @@
             <div class="alert alert-{{$alert_type}}" role="alert">
                 {{$alert_msg}}
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">X</span>
+                    <span {{-- aria-hidden="true" --}}wire:click="closeAlert">X</span>
                 </button>
             </div>
             @endif
@@ -31,40 +31,43 @@
                                     {{-- @if ($job_order==false) --}}
                                     <div class="form-group row">
                                         <div class="col md-12" style="align-content: center;">
-                                            <button class="btn btn-{{$pre_press==true ? 'primary' :'secondary' }}" wire:click="formStep('Pre_Press')">Pre Press {{$job_order}}</button>
+                                            <button class="btn btn-{{$pre_press==true ? 'primary' :'secondary' }}" wire:click="formStep('Pre_Press')">Pre Press</button>
                                             <button class="btn btn-{{$press==true ? 'primary' :'secondary' }}" wire:click="formStep('Press')">Press</button>
                                             <button class="btn btn-{{$post_press==true ? 'primary' :'secondary' }}" wire:click="formStep('Post_Press')">Post Press</button>
                                             <button class="btn btn-{{$job_order==true ? 'primary' :'secondary' }}" wire:click="formStep('Order_Generated')">Job Order</button>
                                         </div>
                                     </div>
                                     {{-- @endif --}}
-                                <form wire:submit.prevent="savePrePress" class="reset-form">
+                                <form id="pre_press" wire:submit.prevent="savePrePress" class="reset-form">
                                     @if ($pre_press==true)
-                                    <div class="form-group row" wire:ignore>
+                                    <div class="form-group row">
                                         <label class="col-sm-2 col-form-label"><strong>Customer's Name</strong></label>
-                                        <div class="col-sm-4">
-                                            <select class="form-control" id="select2-dropdown" wire:model="customer_name">
+                                        <div class="col-sm-4" {{--  wire:ignore --}}>
+                                            <select class="form-control" {{-- id="select2-dropdown" --}} wire:model="customer_name">
                                                 <option value="">--Select--</option>
                                                 @foreach ($customer as $cust)
                                                     <option value="{{$cust->id}}" {{$customer_name==$cust->id?'selected':''}}>{{$cust->name}}</option>
                                                 @endforeach
                                             </select>
                                         </div>
-                                        <input type="hidden" id="cust_id" wire:model="customer_name">
+                                        @error('customer_name') <span class="error-msg">{{ $message }}</span> @enderror
                                         <div class="col-sm-2">
                                             <span class="btn btn-warning" wire:click="addCustomer" {{-- data-toggle="modal" data-target=".bd-example-modal-lg" --}}>Add Customer</span>
                                         </div>
                                     </div>
+                                    <input type="hidden" id="cust_id" wire:model="customer_name">
 
                                     <div class="form-group row">
                                         <label class="col-sm-2 col-form-label"><strong>Job Date</strong></label>
-                                        <div class="col-sm-4" wire:ignore>
-                                            <input type="date" class="form-control" id='CalendarDateTime' wire:model="job_date">
+                                        <div class="col-sm-4">
+                                            <input type="date" class="form-control" wire:model="job_date">
+                                            @error('job_date') <span class="error-msg">{{ $message }}</span> @enderror
                                         </div>
 
                                         <label class="col-sm-2 col-form-label"><strong>Job Details</strong></label>
                                         <div class="col-sm-4">
                                             <input type="text" class="form-control" wire:model="job_details">
+                                            @error('job_details') <span class="error-msg">{{ $message }}</span> @enderror
                                         </div>
                                     </div>
 
@@ -73,6 +76,7 @@
                                         <div class="col-sm-2">
                                             <input type="radio" value="By_Party" wire:model="design_by">
                                             <label for="By Party" class="col-form-label" >By Party</label>
+                                            @error('design_by') <span class="error-msg">{{ $message }}</span> @enderror
                                         </div>
                                         <div class="col-sm-2">
                                             <input type="radio" value="By_Us" wire:model="design_by">
@@ -83,11 +87,13 @@
                                         <label class="col-sm-2 col-form-label"><strong>Colour</strong></label>
                                         <div class="col-sm-4">
                                             <input type="text" class="form-control" wire:model="colour">
+                                            @error('colour') <span class="error-msg">{{ $message }}</span> @enderror
                                         </div>
                                         <label class="col-sm-2 col-form-label"><strong>Sub Colour</strong></label>
                                         <div class="col-sm-1">
                                             <input type="radio" value="1+0" wire:model="sub_color">
                                             <label for="(1+0)" class="col-form-label" >(1+0)</label>
+                                            @error('sub_color') <span class="error-msg">{{ $message }}</span> @enderror
                                         </div>
                                         <div class="col-sm-1">
                                             <input type="radio" value="1+1" wire:model="sub_color">
@@ -114,6 +120,7 @@
                                                     <option value="{{$plate->id}}" {{$ctp_size==$plate->id?'selected':''}}>{{$plate->item_code}}</option>
                                                 @endforeach
                                             </select>
+                                            @error('ctp_size') <span class="error-msg">{{ $message }}</span> @enderror
                                         </div>
                                     </div>
                                     <div class="form-group row">
@@ -121,6 +128,7 @@
                                         <div class="col-sm-1">
                                             <input type="radio" value="CTP" wire:model="ctp_type" >
                                             <label for="CTP" class="col-form-label">CTP</label>
+                                            @error('ctp_type') <span class="error-msg">{{ $message }}</span> @enderror
                                         </div>
                                         <div class="col-sm-1">
                                             <input type="radio" value="SET" wire:model="ctp_type">
@@ -140,7 +148,7 @@
                                     </div>
                                     @endif
                                 </form>
-                                <form wire:submit.prevent="savePress" class="reset-form">
+                                <form id="press" wire:submit.prevent="savePress" class="reset-form">
                                     @if ($press==true)
                                     <div class="form-group row">
                                         <label class="col-sm-2 col-form-label"><strong>Paper Type</strong></label>
@@ -152,11 +160,28 @@
                                                     <option value="{{$paper->id}}" {{$ctp_size==$paper->id?'selected':''}}>{{$paper->item_code}}</option>
                                                 @endforeach
                                             </select>
+                                            @error('paper_type') <span class="error-msg">{{ $message }}</span> @enderror
+                                        </div>
+                                         <label class="col-sm-2 col-form-label"><strong>GSM</strong></label>
+                                        <div class="col-sm-4">
+                                            <input type="text" class="form-control" wire:model="gsm">
+                                            @error('gsm') <span class="error-msg">{{ $message }}</span> @enderror
+                                        </div>
+
+                                    </div>
+
+                                    <div class="form-group row">
+
+                                        <label class="col-sm-2 col-form-label"><strong>Paper Cutting Size</strong></label>
+                                        <div class="col-sm-4">
+                                            <input type="text" class="form-control" wire:model="paper_cutting_size">
+                                            @error('paper_cutting_size') <span class="error-msg">{{ $message }}</span> @enderror
                                         </div>
                                         <label class="col-sm-2 col-form-label"><strong>Paper Supplied By</strong></label>
                                         <div class="col-sm-2">
                                             <input type="radio" value="By Party" wire:model="paper_sup_by">
                                             <label for="By Party" class="col-form-label" >By Party</label>
+                                            @error('paper_sup_by') <span class="error-msg">{{ $message }}</span> @enderror
                                         </div>
                                         <div class="col-sm-2">
                                             <input type="radio" value="By Us" wire:model="paper_sup_by">
@@ -165,19 +190,17 @@
                                     </div>
 
                                     <div class="form-group row">
-                                        <label class="col-sm-2 col-form-label"><strong>GSM</strong></label>
-                                        <div class="col-sm-4">
-                                            <input type="text" class="form-control" wire:model="gsm">
-                                        </div>
-                                        <label class="col-sm-2 col-form-label"><strong>Paper Cutting Size</strong></label>
-                                        <div class="col-sm-4">
-                                            <input type="text" class="form-control" wire:model="paper_cutting_size">
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group row">
                                         <label class="col-sm-2 col-form-label"><strong>Press Machine Type</strong></label>
-                                        <div class="col-sm-2">
+                                        <div class="col-sm-4">
+                                            <select class="form-control" wire:model="machine_type" wire:change="changePaper">
+                                                <option value="">--Select--</option>
+                                                @foreach ($machines as $machine)
+                                                    <option value="{{$machine->id}}" {{$ctp_size==$machine->id?'selected':''}}>{{$machine->name}}</option>
+                                                @endforeach
+                                            </select>
+                                            @error('machine_type') <span class="error-msg">{{ $message }}</span> @enderror
+                                        </div>
+                                        {{-- <div class="col-sm-2">
                                             <input type="radio" value="Heidelbarg" wire:model="machine_type">
                                             <label for="Heidelbarg" class="col-form-label" >Heidelbarg</label>
                                         </div>
@@ -188,13 +211,14 @@
                                         <div class="col-sm-2">
                                             <input type="radio" value="WEB-578/508" wire:model="machine_type">
                                             <label for="WEB-578/508" class="col-form-label" >WEB-578/508</label>
-                                        </div>
+                                        </div> --}}
                                     </div>
 
                                     <div class="form-group row">
                                         <label class="col-sm-2 col-form-label"><strong>Pages</strong></label>
                                         <div class="col-sm-4">
                                             <input type="text" class="form-control" wire:model="pages">
+                                            @error('pages') <span class="error-msg">{{ $message }}</span> @enderror
                                         </div>
                                         <label class="col-sm-2 col-form-label"><strong>Total Forma</strong></label>
                                         <div class="col-sm-4">
@@ -208,6 +232,7 @@
                                         <div class="col-sm-2">
                                             <input type="radio" value="1" wire:model="ss_or_bb">
                                             <label for="ss_or_bb" class="col-form-label" >Single Side</label>
+                                            @error('ss_or_bb') <span class="error-msg">{{ $message }}</span> @enderror
                                         </div>
                                         <div class="col-sm-2">
                                             <input type="radio" value="0" wire:model="ss_or_bb">
@@ -251,7 +276,7 @@
                                     </div>
                                     @endif
                                 </form>
-                                <form wire:submit.prevent="savePostPress" class="reset-form">
+                                <form id="post_press" wire:submit.prevent="savePostPress" class="reset-form">
                                     @if ($post_press==true)
                                     <div class="form-group row">
                                         <div class="col-sm-2">
@@ -313,11 +338,13 @@
                                         <label class="col-sm-2 col-form-label"><strong>Date Of Delivery</strong></label>
                                         <div class="col-sm-4">
                                             <input type="date" class="form-control" wire:model="date_of_delivery">
+                                            @error('date_of_delivery') <span class="error-msg">{{ $message }}</span> @enderror
                                         </div>
                                         <label class="col-sm-2 col-form-label"><strong>Delivery By</strong></label>
                                         <div class="col-sm-2">
                                             <input type="radio" value="Hand" wire:model="delivery_by">
                                             <label for="delivery_by" class="col-form-label" >Hand</label>
+                                            @error('delivery_by') <span class="error-msg">{{ $message }}</span> @enderror
                                         </div>
                                         <div class="col-sm-2">
                                             <input type="radio" value="Transport" wire:model="delivery_by">
@@ -333,7 +360,7 @@
                                     </div>
                                     @endif
                                 </form>
-                                <form wire:submit.prevent="saveAndGenerateOrder" class="reset-form">
+                                <form id="post_press" wire:submit.prevent="saveAndGenerateOrder" class="reset-form">
                                     @if ($job_order==true)
                                     <div class="form-group row">
                                         <label class="col-sm-2 col-form-label"><strong>Customer Name</strong></label>
@@ -397,6 +424,7 @@
                                         <label class="col-sm-2 col-form-label"><strong>Date Of Delivery</strong></label>
                                         <div class="col-sm-4">
                                             <input type="date" class="form-control" wire:model="date_of_delivery_jo">
+                                            @error('date_of_delivery_jo') <span class="error-msg">{{ $message }}</span> @enderror
                                         </div>
                                     </div>
 
@@ -405,6 +433,7 @@
                                         <div class="col-sm-2">
                                             <input type="radio" value="Hand" wire:model="delivery_by_jo">
                                             <label for="delivery_by" class="col-form-label" >Hand</label>
+                                            @error('delivery_by_jo') <span class="error-msg">{{ $message }}</span> @enderror
                                         </div>
                                         <div class="col-sm-2">
                                             <input type="radio" value="Transport" wire:model="delivery_by_jo">
@@ -416,6 +445,7 @@
                                         <label class="col-sm-2 col-form-label"><strong>Total Amount</strong></label>
                                         <div class="col-sm-4">
                                             <input type="text" class="form-control" wire:model="total_amount">
+                                            @error('total_amount') <span class="error-msg">{{ $message }}</span> @enderror
                                         </div>
                                     </div>
 
@@ -423,6 +453,7 @@
                                         <label class="col-sm-2 col-form-label"><strong>Advance Amount</strong></label>
                                         <div class="col-sm-4">
                                             <input type="text" class="form-control" wire:model="advance_amount" wire:change="balanceAmount">
+                                            @error('advance_amount') <span class="error-msg">{{ $message }}</span> @enderror
                                         </div>
                                     </div>
 
@@ -430,6 +461,7 @@
                                         <label class="col-sm-2 col-form-label"><strong>Balance Amount</strong></label>
                                         <div class="col-sm-4">
                                             <input type="text" class="form-control" wire:model="balance_amount">
+                                            @error('balance_amount') <span class="error-msg">{{ $message }}</span> @enderror
                                         </div>
                                     </div>
 
@@ -458,23 +490,27 @@
                                                     <label class="col-sm-2 col-form-label"><strong>Name</strong></label>
                                                     <div class="col-sm-4">
                                                         <input type="text" class="form-control" wire:model="name">
+                                                        @error('name') <span class="error-msg">{{ $message }}</span> @enderror
                                                     </div>
 
                                                     <label class="col-sm-2 col-form-label"><strong>Phone</strong></label>
                                                     <div class="col-sm-4">
-                                                        <input type="text" class="form-control" wire:model="phone">
+                                                        <input type="number" class="form-control" wire:model="phone">
+                                                        @error('phone') <span class="error-msg">{{ $message }}</span> @enderror
                                                     </div>
                                                 </div>
 
                                                 <div class="form-group row">
                                                     <label class="col-sm-2 col-form-label"><strong>Email</strong></label>
                                                     <div class="col-sm-4">
-                                                        <input type="text" class="form-control" wire:model="email">
+                                                        <input type="email" class="form-control" wire:model="email">
+                                                        @error('email') <span class="error-msg">{{ $message }}</span> @enderror
                                                     </div>
 
                                                     <label class="col-sm-2 col-form-label"><strong>Address</strong></label>
                                                     <div class="col-sm-4">
                                                         <input type="text" class="form-control" wire:model="address">
+                                                        @error('address') <span class="error-msg">{{ $message }}</span> @enderror
                                                     </div>
                                                 </div>
 
@@ -495,15 +531,6 @@
         </div>
     </div>
 </div>
-
-{{-- @once
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/zebra_datepicker@latest/dist/css/default/zebra_datepicker.min.css">
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-<script src="https://cdn.jsdelivr.net/npm/zebra_datepicker@latest/dist/zebra_datepicker.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-
-
-@endonce --}}
 
 
 

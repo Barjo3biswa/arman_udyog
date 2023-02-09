@@ -31,4 +31,9 @@ class JobCard extends Model
     {
         return $this->hasOne(Item::class, 'id','paper_type');
     }
+
+    public function machine()
+    {
+        return $this->hasOne(MachineType::class, 'id','press_machine_type');
+    }
 }

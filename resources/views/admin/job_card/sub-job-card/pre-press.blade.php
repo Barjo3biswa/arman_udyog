@@ -3,7 +3,7 @@
     <div class="row">
         <div class="col-md-12" style="text-align: center">
             <h4><u>Pre Press</u>
-                <button class="btn btn-primary not-print" onclick="printDiv('printableArea2')">Print</button></h4>
+                {{-- <button class="btn btn-primary not-print" onclick="printDiv('printableArea2')">Print</button></h4> --}}
         </div>
     </div>
     <div class="form-group row">

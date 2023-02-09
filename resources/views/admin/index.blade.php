@@ -11,28 +11,28 @@
                         <div class="card bg-c-blue order-card">
                             <div class="card-block">
                                 <h6 class="m-b-20">Orders Received</h6>
-                                <h2 class="text-right"><i class="ti-shopping-cart f-left"></i><span>486</span>
+                                <h2 class="text-right"><i class="ti-shopping-cart f-left"></i><span>{{App\Helper\helper::totalOrder()}}</span>
                                 </h2>
-                                <p class="m-b-0">Completed Orders<span class="f-right">351</span></p>
+                                <p class="m-b-0">Order Delivered<span class="f-right">{{App\Helper\helper::orderCompleted()}}</span></p>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-6 col-xl-3">
                         <div class="card bg-c-green order-card">
                             <div class="card-block">
-                                <h6 class="m-b-20">Total Sales</h6>
-                                <h2 class="text-right"><i class="ti-tag f-left"></i><span>1641</span></h2>
-                                <p class="m-b-0">This Month<span class="f-right">213</span></p>
+                                <h6 class="m-b-20">Order To Be Delivered</h6>
+                                <h2 class="text-right"><i class="ti-tag f-left"></i><span>{{App\Helper\helper::orderNotCompleted()}}</span></h2>
+                                <p class="m-b-0">This Month<span class="f-right">{{App\Helper\helper::orderNotCompleted()}}</span></p>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-6 col-xl-3">
                         <div class="card bg-c-yellow order-card">
                             <div class="card-block">
-                                <h6 class="m-b-20">Revenue</h6>
-                                <h2 class="text-right"><i class="ti-reload f-left"></i><span>$42,562</span>
+                                <h6 class="m-b-20">Total Amount</h6>
+                                <h2 class="text-right"><i class="ti-reload f-left"></i><span>{{App\Helper\helper::totalAmount('all')}}</span>
                                 </h2>
-                                <p class="m-b-0">This Month<span class="f-right">$5,032</span></p>
+                                <p class="m-b-0">This Month<span class="f-right">{{App\Helper\helper::totalAmount('this_month')}}</span></p>
                             </div>
                         </div>
                     </div>
@@ -49,7 +49,7 @@
                     <!-- order-card end -->
 
                     <!-- statustic and process start -->
-                    <div class="col-lg-8 col-md-12">
+                    {{-- <div class="col-lg-8 col-md-12">
                         <div class="card">
                             <div class="card-header">
                                 <h5>Statistics</h5>
@@ -324,11 +324,11 @@
                                 <i class="fa fa-puzzle-piece text-c-pink d-block f-40"></i>
                                 <h4 class="m-t-20">Business Plan</h4>
                                 <p class="m-b-20">This is your current active plan</p>
-                                {{-- <button class="btn btn-danger btn-sm btn-round">Upgrade to
-                                    VIP</button> --}}
+                                <button class="btn btn-danger btn-sm btn-round">Upgrade to
+                                    VIP</button>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
                     <!-- social statustic end -->
 
                     <!-- users visite and profile start -->
